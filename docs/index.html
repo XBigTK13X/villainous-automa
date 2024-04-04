@@ -12,41 +12,72 @@
 
     </head>
     <body>
-        <h1>Villainous Automa</h1>
-        <button onclick="window.chooseGame('disney')">Disney</button>
-        <button onclick="window.chooseGame('marvel')">Marvel</button>
-        <button onclick="window.chooseDifficulty('hard')">Hard Difficulty</button>
-        <button onclick="window.chooseDifficulty('normal')">Normal Difficulty</button>
-        <button onclick="window.takeAutomaTurn()">Take Automa Turn</button>
-        <button onclick="window.fateAgainstAutoma()">Fate Against Automa</button>
-        <button onclick="window.playerTrigger('A')">Player Trigger A</button>
-        <button onclick="window.playerTrigger('B')">Player Trigger B</button>
-        <button onclick="window.playerTrigger('C')">Player Trigger C</button>
-        <br/>
-        <br/>
-        <div id="villain-chooser"></div>
+        <h1 id="title">Villainous Automa</h1>
+        <h2 id="call-to-action">Choose a Difficulty</h2>
+        <div id="difficulty-chooser">
+            <button onclick="window.chooseDifficulty('hard')">Hard Difficulty</button>
+            <button onclick="window.chooseDifficulty('normal')">Normal Difficulty</button>
+        </div>
+        <div class="hidden-gui" id="game-chooser">
+            <button id="button-game-disney" onclick="window.chooseGame('disney')">Disney</button>
+            <button id="button-game-marvel" onclick="window.chooseGame('marvel')">Marvel</button>
+        </div>
+        <div class="hidden-gui" id="game-actions">
+            <button onclick="window.takeAutomaTurn()">Take Automa Turn</button>
+            <button onclick="window.fateAgainstAutoma()">Fate Against Automa</button>
+            <button onclick="window.playerTrigger('A')">Player Trigger A</button>
+            <button onclick="window.playerTrigger('B')">Player Trigger B</button>
+            <button onclick="window.playerTrigger('C')">Player Trigger C</button>
+        </div>
+
+        <div class="hidden-gui" id="villain-chooser"></div>
+        <div class="hidden-gui" id="automa-container">
+            <div id="automa-log">
+                <p id="last-action"></p>
+            </div>
             <div id="automa-brain" class="layered-images"></div>
             <div id="automa-board-area" class="layered-images"></div>
+        </div>
         <script>
             $(function(){
                 window.automaPosition = 0
                 window.powerPositions = [1,7,13,19,25,31,37,43,49]
                 window.powerImages = [1,2,3,4,5,6,7,8,9]
                 window.secondDiePosition = 21
-                window.winPosition = 50
+                window.victoryPosition = 50
                 window.hasSecondDie = false
                 window.automaFateBrainActions = 0
                 window.difficulty = 'hard'
                 window.triggerA = false
                 window.triggerB = false
                 window.triggerC = false
+                window.powerLocations = [0,0,0]
+                window.currentLog = ''
+
+                window.clearLog = ()=>{
+                    window.currentLog = ''
+                    $("#last-action").html(window.currentLog)
+                }
+
+                window.logAction = (action)=>{
+                    if(window.currentLog !== ''){
+                        window.currentLog += ' '+action
+                    }
+                    else {
+                        window.currentLog += action
+                    }
+                    $("#last-action").html(window.currentLog)
+                }
 
                 window.chooseDifficulty = (difficulty)=>{
                     window.difficulty = difficulty
+                    $("#difficulty-chooser").toggleClass('hidden-gui')
+                    $("#game-chooser").toggleClass('hidden-gui')
+                    $("#call-to-action").text("Choose a Game")
                 }
 
                 window.chooseGame = (game)=>{
-                    window.imageRoot = `file:///E:/develop/villainous-automa/docs/image/${game}/`
+                    window.imageRoot = `file:///E:/develop/villainous-automa/docs/image/${game}`
                     if(game === 'disney'){
                         let villainChooserMarkup = window.villains_list.disney.map((villain)=>{
                             return `<button onclick="window.chooseVillain('${game}','${villain.brainId}')">${villain.name}</button>`
@@ -59,11 +90,19 @@
                         }).join('')
                         $('#villain-chooser').html(villainChooserMarkup)
                     }
+                    $("#game-chooser").toggleClass('hidden-gui')
+                    $("#villain-chooser").toggleClass('hidden-gui')
+                    $("#call-to-action").text("Choose Your Villain")
                 }
 
                 window.chooseVillain = (game, brainId)=>{
                     window.brainId = brainId
-                    window.playerTrigger()
+                    window.playerTrigger('Nothin')
+                    $("#villain-chooser").toggleClass('hidden-gui')
+                    $("#automa-container").toggleClass('hidden-gui')
+                    $('#game-actions').toggleClass('hidden-gui')
+                    $("#call-to-action").toggleClass('hidden-gui')
+                    $('#title').toggleClass('hidden-gui')
                 }
 
                 window.rollD6 = ()=>{
@@ -71,11 +110,19 @@
                 }
 
                 window.moveAutoma = (amount)=>{
+                    window.logAction(`Moving the automa ${amount} spaces.`)
                     window.automaPosition += amount
-                    if(window.automaPosition > window.secondDiePosition){
+                    if(window.automaPosition < 0){
+                        window.automaPosition = 0
+                    }
+                    if(window.automaPosition > window.secondDiePosition && !window.hasSecondDie){
+                        window.logAction(`Automa gained the second movement die.`)
                         window.hasSecondDie = true
                     }
-                    if(window.automaPosition < window.winPosition && window.automaPosition >= 0){
+                    if(window.automaPosition >= window.victoryPosition){
+                        window.automaPosition = window.victoryPosition
+                    }
+                    if(window.automaPosition <= window.victoryPosition && window.automaPosition >= 0){
                         let automaBoardMarkup = `<img id="automa-board" src="${window.imageRoot}/board.png" />`
                         if(!window.triggerA){
                             automaBoardMarkup += `<img class="layered-image" id="trigger-a" src="${window.imageRoot}/power-overlay/A.png" />`
@@ -86,63 +133,110 @@
                         if(!window.triggerC && window.difficulty === 'hard'){
                             automaBoardMarkup += `<img class="layered-image" id="trigger-a" src="${window.imageRoot}/power-overlay/C.png" />`
                         }
+                        let powerCounts = {}
+                        let powerLayers = []
+                        for(let powerIndex of window.powerLocations){
+                            if(powerIndex !== 0){
+                                if(!powerCounts[powerIndex]){
+                                    powerCounts[powerIndex] = 0
+                                }
+                                powerCounts[powerIndex] += 1
+                                powerLayers.push(`${window.powerImages[powerIndex]}-${powerCounts[powerIndex]}`)
+                            }
+                        }
+                        for(let layer of powerLayers){
+                            automaBoardMarkup += `<img class="layered-image" src="${window.imageRoot}/power-overlay/${layer}.png" />`
+                        }
                         if(window.automaPosition > 0){
                             automaBoardMarkup += `<img class="layered-image" id="automa-mover" src="${window.imageRoot}/villain-overlay/${window.automaPosition}.png" />`
                         }
                         $("#automa-board-area").html(automaBoardMarkup)
+                        if(window.automaPosition >= window.victoryPosition){
+                            window.clearLog()
+                            window.logAction('The game is over. The automa wins.')
+                        }
                     }
                 }
 
                 window.takeAutomaTurn = ()=>{
+                    window.clearLog()
                     let firstDie = window.rollD6();
+                    window.logAction(`Automa rolled the first die and got a ${firstDie}.`)
                     let secondDie = 0
                     if (!!window.hasSecondDie){
                         let secondDie = window.rollD6()
+                        window.logAction(`Automa rolled the second die and got a ${secondDie}.`)
                     }
                     if(firstDie === 1){
                         window.automaFateBrainActions += 1
+                        window.logAction(`The first die was a 1, queue up an AFBA.`)
                     }
                     if(secondDie === 1){
                         window.automaFateBrainActions += 1
+                        window.logAction(`The second die was a 1, queue up an AFBA.`)
                     }
+
                     window.moveAutoma(firstDie > secondDie ? firstDie : secondDie)
                 }
 
                 window.fateAgainstAutoma = ()=>{
+                    window.clearLog()
                     let die = window.rollD6()
+                    window.logAction(`Player rolled a fate die against the automa and got ${die}.`)
                     if(window.difficulty === 'hard'){
+                        window.logAction(`Playing on hard, so the adjusted value is ${die - 2}.`)
                         die -= 2
                     }
                     else {
+                        window.logAction(`Playing on normal, so the adjusted value is ${die - 2}.`)
                         die -= 1
                     }
                     if(die > 0){
                         window.moveAutoma(-die)
+                    } else {
+                        window.logAction('Fate action has no impact on the automa.')
                     }
                 }
 
+                window.getNextFateSpaceIndex = ()=>{
+                    for(let ii = 0; ii < window.powerPositions.length; ii++){
+                        if(window.powerPositions[ii] > window.automaPosition){
+                            return ii
+                        }
+                    }
+                    return window.powerPositions.length - 1
+                }
+
                 window.playerTrigger = (trigger)=>{
-                    if(trigger === 'A'){
+                    if(trigger === 'A' && !window.triggerA){
                         window.triggerA = true
+                        window.powerLocations[0] = window.getNextFateSpaceIndex()
                     }
-                    if(trigger === 'B'){
+                    if(trigger === 'B' && !window.triggerB){
                         window.triggerB = true
+                        window.powerLocations[1] = window.getNextFateSpaceIndex()
                     }
-                    if(trigger === 'C'){
+                    if(trigger === 'C' && !window.triggerC){
                         window.triggerC = true
+                        window.powerLocations[2] = window.getNextFateSpaceIndex()
                     }
                     let villainBrainMarkup = `<img class="layered-image" src="${window.imageRoot}/brain/${brainId}"/>`
                     if(!!window.triggerA){
-                        villainBrainMarkup += `<img class="layered-image" src="${window.imageRoot}../brain-cancel/A.png"/>`
+                        villainBrainMarkup += `<img class="layered-image" src="${window.imageRoot}/../brain-cancel/A.png"/>`
                     }
                     if(!!window.triggerB){
-                        villainBrainMarkup += `<img class="layered-image" src="${window.imageRoot}../brain-cancel/B.png"/>`
+                        villainBrainMarkup += `<img class="layered-image" src="${window.imageRoot}/../brain-cancel/B.png"/>`
                     }
                     if(window.difficulty !== 'hard' || !!window.triggerC){
-                        villainBrainMarkup += `<img class="layered-image" src="${window.imageRoot}../brain-cancel/C.png"/>`
+                        villainBrainMarkup += `<img class="layered-image" src="${window.imageRoot}/../brain-cancel/C.png"/>`
                     }
                     $("#automa-brain").html(villainBrainMarkup)
+
                     window.moveAutoma(0)
+                    if(trigger === 'Nothin'){
+                        window.clearLog()
+                        window.logAction('Setup the automa.')
+                    }
                 }
             })
         </script>

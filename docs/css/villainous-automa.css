@@ -1,12 +1,25 @@
 img {
-    width: 45vw;
+    height: 35vh;
     margin: 1vw;
 }
 
 .layered-images {
     position: relative;
-    height: 40vh;
+    height: 35vh;
+    margin-top: 5vh;
 }
 .layered-images > img {
     position: absolute;
+}
+
+.hidden-gui {
+    display: none;
+}
+
+button {
+    font-size: 1em;
+    width: 12em;
+    height: 4em;
+    overflow: none;
+    margin: .5em;
 }
