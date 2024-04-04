@@ -1,0 +1,12 @@
+img {
+    width: 45vw;
+    margin: 1vw;
+}
+
+.layered-images {
+    position: relative;
+    height: 40vh;
+}
+.layered-images > img {
+    position: absolute;
+}

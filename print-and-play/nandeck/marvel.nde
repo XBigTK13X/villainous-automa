@@ -8,7 +8,7 @@ BASERANGE=,ON
 ;https://boardgamegeek.com/thread/2352310/article/43387474#43387474
 ;https://www.reddit.com/r/DisneyVillainous/comments/wgvysj/what_are_the_fonts_used_in_the_villain_guide_and/
 ;https://www.reddit.com/r/DisneyVillainous/comments/tggd6a/box/
-LINK=".\villainous.csv"
+LINK=".\marvel.csv"
 
 
 FONT="Chakra Petch",18,TB,#000000

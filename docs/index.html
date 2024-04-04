@@ -1,13 +1,149 @@
+<!DOCTYPE html>
 <html>
     <head>
+        <!--
         <script src="https://raw.githubusercontent.com/XBigTK13X/villainous-automa/main/docs/js/jquery-3.7.1.js"></script>
+        <script src="https://raw.githubusercontent.com/XBigTK13X/villainous-automa/main/docs/js/villains.js"></script>
+        <link rel="stylesheet" href="https://raw.githubusercontent.com/XBigTK13X/villainous-automa/main/docs/css/villainous-automa.css">
+        -->
+        <script src="file:///E:/develop/villainous-automa/docs/js/jquery-3.7.1.js"></script>
+        <script src="file:///E:/develop/villainous-automa/docs/js/villains.js"></script>
+        <link rel="stylesheet" href="file:///E:/develop/villainous-automa/docs/css/villainous-automa.css">
+
     </head>
     <body>
         <h1>Villainous Automa</h1>
-        <p>Oh yeah...I can feel it.</p>
+        <button onclick="window.chooseGame('disney')">Disney</button>
+        <button onclick="window.chooseGame('marvel')">Marvel</button>
+        <button onclick="window.chooseDifficulty('hard')">Hard Difficulty</button>
+        <button onclick="window.chooseDifficulty('normal')">Normal Difficulty</button>
+        <button onclick="window.takeAutomaTurn()">Take Automa Turn</button>
+        <button onclick="window.fateAgainstAutoma()">Fate Against Automa</button>
+        <button onclick="window.playerTrigger('A')">Player Trigger A</button>
+        <button onclick="window.playerTrigger('B')">Player Trigger B</button>
+        <button onclick="window.playerTrigger('C')">Player Trigger C</button>
+        <br/>
+        <br/>
+        <div id="villain-chooser"></div>
+            <div id="automa-brain" class="layered-images"></div>
+            <div id="automa-board-area" class="layered-images"></div>
         <script>
             $(function(){
+                window.automaPosition = 0
+                window.powerPositions = [1,7,13,19,25,31,37,43,49]
+                window.powerImages = [1,2,3,4,5,6,7,8,9]
+                window.secondDiePosition = 21
+                window.winPosition = 50
+                window.hasSecondDie = false
+                window.automaFateBrainActions = 0
+                window.difficulty = 'hard'
+                window.triggerA = false
+                window.triggerB = false
+                window.triggerC = false
 
+                window.chooseDifficulty = (difficulty)=>{
+                    window.difficulty = difficulty
+                }
+
+                window.chooseGame = (game)=>{
+                    window.imageRoot = `file:///E:/develop/villainous-automa/docs/image/${game}/`
+                    if(game === 'disney'){
+                        let villainChooserMarkup = window.villains_list.disney.map((villain)=>{
+                            return `<button onclick="window.chooseVillain('${game}','${villain.brainId}')">${villain.name}</button>`
+                        }).join('')
+                        $('#villain-chooser').html(villainChooserMarkup)
+                    }
+                    if(game === 'marvel'){
+                        let villainChooserMarkup = window.villains_list.marvel.map((villain)=>{
+                            return `<button onclick="window.chooseVillain('${game}','${villain.brainId}')">${villain.name}</button>`
+                        }).join('')
+                        $('#villain-chooser').html(villainChooserMarkup)
+                    }
+                }
+
+                window.chooseVillain = (game, brainId)=>{
+                    window.brainId = brainId
+                    window.playerTrigger()
+                }
+
+                window.rollD6 = ()=>{
+                    return Math.floor(Math.random() * 6) + 1
+                }
+
+                window.moveAutoma = (amount)=>{
+                    window.automaPosition += amount
+                    if(window.automaPosition > window.secondDiePosition){
+                        window.hasSecondDie = true
+                    }
+                    if(window.automaPosition < window.winPosition && window.automaPosition >= 0){
+                        let automaBoardMarkup = `<img id="automa-board" src="${window.imageRoot}/board.png" />`
+                        if(!window.triggerA){
+                            automaBoardMarkup += `<img class="layered-image" id="trigger-a" src="${window.imageRoot}/power-overlay/A.png" />`
+                        }
+                        if(!window.triggerB){
+                            automaBoardMarkup += `<img class="layered-image" id="trigger-a" src="${window.imageRoot}/power-overlay/B.png" />`
+                        }
+                        if(!window.triggerC && window.difficulty === 'hard'){
+                            automaBoardMarkup += `<img class="layered-image" id="trigger-a" src="${window.imageRoot}/power-overlay/C.png" />`
+                        }
+                        if(window.automaPosition > 0){
+                            automaBoardMarkup += `<img class="layered-image" id="automa-mover" src="${window.imageRoot}/villain-overlay/${window.automaPosition}.png" />`
+                        }
+                        $("#automa-board-area").html(automaBoardMarkup)
+                    }
+                }
+
+                window.takeAutomaTurn = ()=>{
+                    let firstDie = window.rollD6();
+                    let secondDie = 0
+                    if (!!window.hasSecondDie){
+                        let secondDie = window.rollD6()
+                    }
+                    if(firstDie === 1){
+                        window.automaFateBrainActions += 1
+                    }
+                    if(secondDie === 1){
+                        window.automaFateBrainActions += 1
+                    }
+                    window.moveAutoma(firstDie > secondDie ? firstDie : secondDie)
+                }
+
+                window.fateAgainstAutoma = ()=>{
+                    let die = window.rollD6()
+                    if(window.difficulty === 'hard'){
+                        die -= 2
+                    }
+                    else {
+                        die -= 1
+                    }
+                    if(die > 0){
+                        window.moveAutoma(-die)
+                    }
+                }
+
+                window.playerTrigger = (trigger)=>{
+                    if(trigger === 'A'){
+                        window.triggerA = true
+                    }
+                    if(trigger === 'B'){
+                        window.triggerB = true
+                    }
+                    if(trigger === 'C'){
+                        window.triggerC = true
+                    }
+                    let villainBrainMarkup = `<img class="layered-image" src="${window.imageRoot}/brain/${brainId}"/>`
+                    if(!!window.triggerA){
+                        villainBrainMarkup += `<img class="layered-image" src="${window.imageRoot}../brain-cancel/A.png"/>`
+                    }
+                    if(!!window.triggerB){
+                        villainBrainMarkup += `<img class="layered-image" src="${window.imageRoot}../brain-cancel/B.png"/>`
+                    }
+                    if(window.difficulty !== 'hard' || !!window.triggerC){
+                        villainBrainMarkup += `<img class="layered-image" src="${window.imageRoot}../brain-cancel/C.png"/>`
+                    }
+                    $("#automa-brain").html(villainBrainMarkup)
+                    window.moveAutoma(0)
+                }
             })
         </script>
     </body>
