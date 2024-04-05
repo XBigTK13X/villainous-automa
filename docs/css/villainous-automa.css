@@ -6,7 +6,7 @@ img {
 .layered-images {
     position: relative;
     height: 30vh;
-    margin-top: 5vh;
+    margin-top: 1vh;
 }
 .layered-images > img {
     position: absolute;
