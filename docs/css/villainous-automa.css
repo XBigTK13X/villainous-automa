@@ -1,11 +1,11 @@
 img {
-    height: 35vh;
+    height: 30vh;
     margin: 1vw;
 }
 
 .layered-images {
     position: relative;
-    height: 35vh;
+    height: 30vh;
     margin-top: 5vh;
 }
 .layered-images > img {

@@ -1,14 +1,15 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <!--
+        
         <script src="https://raw.githubusercontent.com/XBigTK13X/villainous-automa/main/docs/js/jquery-3.7.1.js"></script>
         <script src="https://raw.githubusercontent.com/XBigTK13X/villainous-automa/main/docs/js/villains.js"></script>
         <link rel="stylesheet" href="https://raw.githubusercontent.com/XBigTK13X/villainous-automa/main/docs/css/villainous-automa.css">
+        <!--
+        <script src="file:///C:/aa/develop/villainous-automa/docs/js/jquery-3.7.1.js"></script>
+        <script src="file:///C:/aa/develop/villainous-automa/docs/js/villains.js"></script>
+        <link rel="stylesheet" href="file:///C:/aa/develop/villainous-automa/docs/css/villainous-automa.css">
         -->
-        <script src="file:///E:/develop/villainous-automa/docs/js/jquery-3.7.1.js"></script>
-        <script src="file:///E:/develop/villainous-automa/docs/js/villains.js"></script>
-        <link rel="stylesheet" href="file:///E:/develop/villainous-automa/docs/css/villainous-automa.css">
 
     </head>
     <body>
@@ -32,6 +33,7 @@
 
         <div class="hidden-gui" id="villain-chooser"></div>
         <div class="hidden-gui" id="automa-container">
+            <h4 id="log-header">Automa Log</h4>
             <div id="automa-log">
                 <p id="last-action"></p>
             </div>
@@ -41,8 +43,12 @@
         <script>
             $(function(){
                 window.automaPosition = 0
-                window.powerPositions = [1,7,13,19,25,31,37,43,49]
+                window.fatePositions = [1,7,13,19,25,31,37,43,49]
                 window.powerImages = [1,2,3,4,5,6,7,8,9]
+                window.powerLocations = [-1,-1,-1]
+                window.disneyConditionPositions = [4,8,12,16,20,24,28,32,36,40,44,48]
+                window.marvelStrengthPlusPositions = [4,12,20,28,36,48]
+                window.marvelStrengthMinusPositions = [8,16,24,32,40,44]
                 window.secondDiePosition = 21
                 window.victoryPosition = 50
                 window.hasSecondDie = false
@@ -51,11 +57,14 @@
                 window.triggerA = false
                 window.triggerB = false
                 window.triggerC = false
-                window.powerLocations = [0,0,0]
+                window.game = null
+                window.abfaCount = 0
+                
                 window.currentLog = ''
 
                 window.clearLog = ()=>{
                     window.currentLog = ''
+                    window.abfaCount = 0
                     $("#last-action").html(window.currentLog)
                 }
 
@@ -77,7 +86,9 @@
                 }
 
                 window.chooseGame = (game)=>{
-                    window.imageRoot = `file:///E:/develop/villainous-automa/docs/image/${game}`
+                    window.game = game
+                    //window.imageRoot = `file:///C:/aa/develop/villainous-automa/docs/image/${game}`
+                    window.imageRoot = `https://raw.githubusercontent.com/XBigTK13X/villainous-automa/main/docs/image/${game}`
                     if(game === 'disney'){
                         let villainChooserMarkup = window.villains_list.disney.map((villain)=>{
                             return `<button onclick="window.chooseVillain('${game}','${villain.brainId}')">${villain.name}</button>`
@@ -122,7 +133,7 @@
                     if(window.automaPosition >= window.victoryPosition){
                         window.automaPosition = window.victoryPosition
                     }
-                    if(window.automaPosition <= window.victoryPosition && window.automaPosition >= 0){
+                    if(window.automaPosition < window.victoryPosition && window.automaPosition >= 0){
                         let automaBoardMarkup = `<img id="automa-board" src="${window.imageRoot}/board.png" />`
                         if(!window.triggerA){
                             automaBoardMarkup += `<img class="layered-image" id="trigger-a" src="${window.imageRoot}/power-overlay/A.png" />`
@@ -135,8 +146,15 @@
                         }
                         let powerCounts = {}
                         let powerLayers = []
+                        for(let ii=0; ii < window.powerLocations.length; ii++){
+                            if(window.powerLocations[ii] !== -1 && window.automaPosition >= window.fatePositions[window.powerLocations[ii]]){
+                                window.powerLocations[ii] = -1
+                                window.logAction("Automa passed or landed on a power token, so queue up an ABFA.")
+                                window.abfaCount += 1
+                            }
+                        }
                         for(let powerIndex of window.powerLocations){
-                            if(powerIndex !== 0){
+                            if(powerIndex !== -1){
                                 if(!powerCounts[powerIndex]){
                                     powerCounts[powerIndex] = 0
                                 }
@@ -150,11 +168,39 @@
                         if(window.automaPosition > 0){
                             automaBoardMarkup += `<img class="layered-image" id="automa-mover" src="${window.imageRoot}/villain-overlay/${window.automaPosition}.png" />`
                         }
-                        $("#automa-board-area").html(automaBoardMarkup)
-                        if(window.automaPosition >= window.victoryPosition){
-                            window.clearLog()
-                            window.logAction('The game is over. The automa wins.')
+                        if(window.game === 'disney'){
+                            if(window.disneyConditionPositions.indexOf(automaPosition) !== -1){
+                                window.logAction("Automa landed on a condition space, so you may play one condition card.")
+                            }
                         }
+                        if(window.game === 'marvel'){
+                            if(window.marvelStrengthPlusPositions.indexOf(automaPosition) !== -1){
+                                window.logAction("Automa landed on a +1 space, so you may place +1 strength on a valid target.")
+                            }
+                            if(window.marvelStrengthMinusPositions.indexOf(automaPosition) !== -1){
+                                window.logAction("Automa landed on a -1 space, so you may place -1 strength on a valid target.")
+                            }
+                        }
+                        if(window.fatePositions.indexOf(automaPosition) !== -1){
+                            window.logAction("Automa landed on a fate space, so queue up an ABFA. ")
+                            window.abfaCount += 1
+                        }
+                        $("#automa-board-area").html(automaBoardMarkup)
+                    }
+                    if(window.abfaCount > 3){
+                        window.logAction("Automa has more than 3 ABFAs queued up. Cap it at 3.")
+                    }
+                    if(window.abfaCount > 0){
+                        $("#log-header").html(`Automa Log ➡️ Execute ${window.abfaCount} Automa Brain Fate Actions`)
+                    }
+                    else {
+                        $("#log-header").html(`Automa Log`)
+                    }
+                    if(window.automaPosition >= window.victoryPosition){
+                        let automaBoardMarkup = `<img class="layered-image" id="automa-mover" src="${window.imageRoot}/villain-overlay/${window.automaPosition}.png" />`
+                        $("#automa-board-area").html(automaBoardMarkup)
+                        window.clearLog()
+                        window.logAction('The game is over. The automa wins.')
                     }
                 }
 
@@ -169,11 +215,13 @@
                     }
                     if(firstDie === 1){
                         window.automaFateBrainActions += 1
-                        window.logAction(`The first die was a 1, queue up an AFBA.`)
+                        window.logAction(`The first die was a 1, so queue up an ABFA.`)
+                        window.abfaCount += 1
                     }
                     if(secondDie === 1){
                         window.automaFateBrainActions += 1
-                        window.logAction(`The second die was a 1, queue up an AFBA.`)
+                        window.logAction(`The second die was a 1, so queue up an AFBA.`)
+                        window.abfaCount += 1
                     }
 
                     window.moveAutoma(firstDie > secondDie ? firstDie : secondDie)
@@ -199,12 +247,15 @@
                 }
 
                 window.getNextFateSpaceIndex = ()=>{
-                    for(let ii = 0; ii < window.powerPositions.length; ii++){
-                        if(window.powerPositions[ii] > window.automaPosition){
+                    if(window.automaPosition <= 0){
+                        return 0
+                    }
+                    for(let ii = 0; ii < window.fatePositions.length; ii++){
+                        if(window.fatePositions[ii] > window.automaPosition){
                             return ii
                         }
                     }
-                    return window.powerPositions.length - 1
+                    return window.fatePositions.length - 1
                 }
 
                 window.playerTrigger = (trigger)=>{
@@ -220,7 +271,7 @@
                         window.triggerC = true
                         window.powerLocations[2] = window.getNextFateSpaceIndex()
                     }
-                    let villainBrainMarkup = `<img class="layered-image" src="${window.imageRoot}/brain/${brainId}"/>`
+                    let villainBrainMarkup = `<img class="layered-image" src="${window.imageRoot}/brain/${window.brainId}"/>`
                     if(!!window.triggerA){
                         villainBrainMarkup += `<img class="layered-image" src="${window.imageRoot}/../brain-cancel/A.png"/>`
                     }
@@ -233,9 +284,11 @@
                     $("#automa-brain").html(villainBrainMarkup)
 
                     window.moveAutoma(0)
+                    window.clearLog()
                     if(trigger === 'Nothin'){
-                        window.clearLog()
                         window.logAction('Setup the automa.')
+                    } else {
+                        window.logAction(`Placed power token for trigger ${trigger} on the board`)
                     }
                 }
             })

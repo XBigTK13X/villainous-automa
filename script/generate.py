@@ -16,7 +16,7 @@ with open('print-and-play/nandeck/disney.csv','r') as read_handle:
                 'fate1': row[4],
                 'fate2': row[5],
                 'fate3': row[6],
-                'brain_id': f'disney_{count + 1:02d}.jpg'
+                'brain_id': f'disney_{count:02d}.jpg'
             }
             if villain['name'] in ['Captain Hook', 'Maleficent', 'Prince John', 'Ursula']:
                 villain['name'] = f'{villain["name"]} ({"ItE" if "Intro" in villain["box"] else "TWTiA"})'
@@ -37,7 +37,7 @@ with open('print-and-play/nandeck/marvel.csv','r') as read_handle:
                 'fate1': row[4],
                 'fate2': row[5],
                 'fate3': row[6],
-                'brain_id': f'marvel_{count + 1:02d}.jpg'
+                'brain_id': f'marvel_{count:02d}.jpg'
             })
         count += 1
 villains_content = 'window.villains_list = {'
