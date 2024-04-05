@@ -168,22 +168,24 @@
                         if(window.automaPosition > 0){
                             automaBoardMarkup += `<img class="layered-image" id="automa-mover" src="${window.imageRoot}/villain-overlay/${window.automaPosition}.png" />`
                         }
-                        if(window.game === 'disney'){
-                            if(window.disneyConditionPositions.indexOf(automaPosition) !== -1){
-                                window.logAction("Automa landed on a condition space, so you may play one condition card.")
+                        if(amount > 0){
+                            if(window.game === 'disney'){
+                                if(window.disneyConditionPositions.indexOf(automaPosition) !== -1){
+                                    window.logAction("Automa landed on a condition space, so you may play one condition card.")
+                                }
                             }
-                        }
-                        if(window.game === 'marvel'){
-                            if(window.marvelStrengthPlusPositions.indexOf(automaPosition) !== -1){
-                                window.logAction("Automa landed on a +1 space, so you may place +1 strength on a valid target.")
+                            if(window.game === 'marvel'){
+                                if(window.marvelStrengthPlusPositions.indexOf(automaPosition) !== -1){
+                                    window.logAction("Automa landed on a +1 space, so you may place +1 strength on a valid target.")
+                                }
+                                if(window.marvelStrengthMinusPositions.indexOf(automaPosition) !== -1){
+                                    window.logAction("Automa landed on a -1 space, so you may place -1 strength on a valid target.")
+                                }
                             }
-                            if(window.marvelStrengthMinusPositions.indexOf(automaPosition) !== -1){
-                                window.logAction("Automa landed on a -1 space, so you may place -1 strength on a valid target.")
+                            if(window.fatePositions.indexOf(automaPosition) !== -1){
+                                window.logAction("Automa landed on a fate space, so queue up an ABFA. ")
+                                window.abfaCount += 1
                             }
-                        }
-                        if(window.fatePositions.indexOf(automaPosition) !== -1){
-                            window.logAction("Automa landed on a fate space, so queue up an ABFA. ")
-                            window.abfaCount += 1
                         }
                         $("#automa-board-area").html(automaBoardMarkup)
                     }
