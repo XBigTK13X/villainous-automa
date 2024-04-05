@@ -2,9 +2,9 @@
 <html>
     <head>
         
-        <script src="https://raw.githubusercontent.com/XBigTK13X/villainous-automa/main/docs/js/jquery-3.7.1.js"></script>
-        <script src="https://raw.githubusercontent.com/XBigTK13X/villainous-automa/main/docs/js/villains.js"></script>
-        <link rel="stylesheet" href="https://raw.githubusercontent.com/XBigTK13X/villainous-automa/main/docs/css/villainous-automa.css">
+        <script src="js/jquery-3.7.1.js"></script>
+        <script src="js/villains.js"></script>
+        <link rel="stylesheet" href="css/villainous-automa.css">
         <!--
         <script src="file:///C:/aa/develop/villainous-automa/docs/js/jquery-3.7.1.js"></script>
         <script src="file:///C:/aa/develop/villainous-automa/docs/js/villains.js"></script>
@@ -88,7 +88,7 @@
                 window.chooseGame = (game)=>{
                     window.game = game
                     //window.imageRoot = `file:///C:/aa/develop/villainous-automa/docs/image/${game}`
-                    window.imageRoot = `https://raw.githubusercontent.com/XBigTK13X/villainous-automa/main/docs/image/${game}`
+                    window.imageRoot = `image/${game}`
                     if(game === 'disney'){
                         let villainChooserMarkup = window.villains_list.disney.map((villain)=>{
                             return `<button onclick="window.chooseVillain('${game}','${villain.brainId}')">${villain.name}</button>`
