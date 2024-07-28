@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        
+
         <script src="js/jquery-3.7.1.js"></script>
         <script src="js/villains.js"></script>
         <link rel="stylesheet" href="css/villainous-automa.css">
@@ -32,7 +32,7 @@
         </div>
 
         <div class="hidden-gui" id="villain-chooser"></div>
-        <div class="hidden-gui" id="automa-container">            
+        <div class="hidden-gui" id="automa-container">
             <div id="automa-brain" class="layered-images"></div>
             <div id="automa-board-area" class="layered-images"></div>
             <h4 id="log-header">Automa Log</h4>
@@ -59,7 +59,7 @@
                 window.triggerC = false
                 window.game = null
                 window.abfaCount = 0
-                
+
                 window.currentLog = ''
 
                 window.clearLog = ()=>{
@@ -209,10 +209,10 @@
                 window.takeAutomaTurn = ()=>{
                     window.clearLog()
                     let firstDie = window.rollD6();
-                    window.logAction(`Automa rolled the first die and got a ${firstDie}.`)
                     let secondDie = 0
+                    window.logAction(`Automa rolled the first die and got a ${firstDie}.`)
                     if (!!window.hasSecondDie){
-                        let secondDie = window.rollD6()
+                        secondDie = window.rollD6()
                         window.logAction(`Automa rolled the second die and got a ${secondDie}.`)
                     }
                     if(firstDie === 1){
