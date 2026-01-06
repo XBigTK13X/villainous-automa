@@ -24,12 +24,13 @@
             <button id="button-game-marvel" onclick="window.chooseGame('marvel')">Marvel</button>
         </div>
         <div class="hidden-gui" id="game-actions">
-            <button onclick="window.takeAutomaTurn()">Take Automa Turn</button>
             <button onclick="window.fateAgainstAutoma()">Fate Against Automa</button>
+            <button onclick="window.moveAutoma(-1,true)">Move Automa -1</button>
             <button onclick="window.moveAutoma(1,true)">Move Automa 1</button>
             <button onclick="window.playerTrigger('A')">Player Trigger A</button>
             <button onclick="window.playerTrigger('B')">Player Trigger B</button>
             <button onclick="window.playerTrigger('C')">Player Trigger C</button>
+            <button onclick="window.takeAutomaTurn()">Take Automa Turn</button>
         </div>
 
         <div class="hidden-gui" id="villain-chooser"></div>
