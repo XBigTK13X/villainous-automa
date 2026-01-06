@@ -1,0 +1,53 @@
+CARDS=12
+BORDER=MARK,#000000,.01
+UNIT=INCH
+PAGE=8.5,11,LANDSCAPE,HV
+DPI=300
+CARDSIZE=5.25,4
+BASERANGE=,ON
+;https://boardgamegeek.com/thread/2352310/article/43387474#43387474
+;https://www.reddit.com/r/DisneyVillainous/comments/wgvysj/what_are_the_fonts_used_in_the_villain_guide_and/
+;https://www.reddit.com/r/DisneyVillainous/comments/tggd6a/box/
+LINK="Z:\My Drive\Family Share\Folders\Board Games\Print and Play\Printed or Bought\Villainous\Marvel\villainous.csv"
+
+
+FONT="Chakra Petch",18,TB,#000000
+;NAME
+TEXT="1-{(NAME)}",CASESTRING([NAME],U),2%,2%,60%,10%,left
+FONT="Chakra Petch",14,T,#373737
+;BOX
+TEXT="1-{(BOX)}",[BOX],57%,2%,40%,10%,right
+IMAGE="1-26","Z:\My Drive\Family Share\Folders\Board Games\Print and Play\Printed or Bought\Villainous\frame.png",1%,17.5%,98%,30%,0,T,10
+;SPECIAL
+FONT="Cabin",11,T,#000000
+TEXT="1-{(SPECIAL)}",[SPECIAL],3%,18%,94%,28%,center,wwcenter
+;SPECIAL HEADER
+FONT="Cabin",9,T,#000000
+TEXT="1-{(SPECIAL)}","Special Rules",75%,13%,20%,10%,right,wordwrap,0,60
+;PREFERENCE HEADER
+FONT="Cabin",9,T,#000000
+TEXT="1-{(SPECIAL)}","Fate Target Priorities",75%,47.5%,20%,10%,right,wordwrap,0,60
+IMAGE="1-26","Z:\My Drive\Family Share\Folders\Board Games\Print and Play\Printed or Bought\Villainous\frame-short.png",1%,52%,100%,8%,0,T,10
+;RESPONSE HEADER
+FONT="Cabin",9,T,#000000
+TEXT="1-{(SPECIAL)}","Villain Activity Responses",65%,61%,30%,10%,right,wordwrap,0,60
+;PREFERENCE
+FONT="Cabin",10,T,#000000
+TEXT="1-{(PREFERENCE)}",[PREFERENCE],3%,53%,94%,6%,center,wordwrap
+FONT="Cabin",11,T,#000000
+;FATE1
+TEXT="1-{(FATE1)}",[FATE1],10%,70%,90%,10%,left,wordwrap
+;FATE2
+TEXT="1-{(FATE2)}",[FATE2],10%,80%,90%,10%,left,wordwrap
+;FATE3
+TEXT="1-{(FATE3)}",[FATE3],10%,90%,90%,10%,left,wordwrap
+;POWER TOKENS
+LINE="1-{(FATE3)}",2%,78%,98%,78%,#d7d7d7,.02
+LINE="1-{(FATE3)}",2%,88%,98%,88%,#d7d7d7,.02
+IMAGE="1-{(FATE3)}","Z:\My Drive\Family Share\Folders\Board Games\Print and Play\Printed or Bought\Villainous\Marvel\Icons\power-edit.png",1%,68%,.35,.35,0,T,80
+IMAGE="1-{(FATE3)}","Z:\My Drive\Family Share\Folders\Board Games\Print and Play\Printed or Bought\Villainous\Marvel\Icons\power-edit.png",1%,78.5%,.35,.35,0,T,80
+IMAGE="1-{(FATE3)}","Z:\My Drive\Family Share\Folders\Board Games\Print and Play\Printed or Bought\Villainous\Marvel\Icons\power-edit.png",1%,89%,.35,.35,0,T,80
+FONT="Ravenholm Color",14,T,#000000
+TEXT="1-{(FATE3)}","A",1.8%,68.5%,.28,.28,center,center
+TEXT="1-{(FATE3)}","B",1.8%,79%,.28,.28,center,center
+TEXT="1-{(FATE3)}","C",1.4%,89.5%,.28,.28,center,center

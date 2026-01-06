@@ -3,20 +3,21 @@ import sys
 import csv
 
 disney_villains = []
-with open('print-and-play/nandeck/disney.csv','r') as read_handle:
+with open('print-and-play/disney/villains.csv','r') as read_handle:
     csv_reader = csv.reader(read_handle, delimiter=',')
     count = 0
     for row in csv_reader:
         if count > 0:
             villain = {
-                'name': row[0],
-                'box': row[1],
-                'special': row[2],
-                'preference': row[3],
-                'fate1': row[4],
-                'fate2': row[5],
-                'fate3': row[6],
-                'brain_id': f'disney_{count}.jpg'
+                'enable': row[0],
+                'name': row[1],
+                'box': row[2],
+                'special': row[3],
+                'preference': row[4],
+                'fate1': row[5],
+                'fate2': row[6],
+                'fate3': row[7],
+                'brain_id': f'villains_{count}.jpg'
             }
             if villain['name'] in ['Captain Hook', 'Maleficent', 'Prince John', 'Ursula']:
                 villain['name'] = f'{villain["name"]} ({"ItE" if "Intro" in villain["box"] else "TWTiA"})'
@@ -24,7 +25,7 @@ with open('print-and-play/nandeck/disney.csv','r') as read_handle:
         count += 1
 
 marvel_villains = []
-with open('print-and-play/nandeck/marvel.csv','r') as read_handle:
+with open('print-and-play/marvel/villains.csv','r') as read_handle:
     csv_reader = csv.reader(read_handle, delimiter=',')
     count = 0
     for row in csv_reader:

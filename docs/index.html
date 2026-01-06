@@ -26,7 +26,7 @@
         <div class="hidden-gui" id="game-actions">
             <button onclick="window.takeAutomaTurn()">Take Automa Turn</button>
             <button onclick="window.fateAgainstAutoma()">Fate Against Automa</button>
-            <button onclick="window.moveAutoma(1)">Move Automa 1</button>
+            <button onclick="window.moveAutoma(1,true)">Move Automa 1</button>
             <button onclick="window.playerTrigger('A')">Player Trigger A</button>
             <button onclick="window.playerTrigger('B')">Player Trigger B</button>
             <button onclick="window.playerTrigger('C')">Player Trigger C</button>
@@ -121,7 +121,7 @@
                     return Math.floor(Math.random() * 6) + 1
                 }
 
-                window.moveAutoma = (amount)=>{
+                window.moveAutoma = (amount,failedAbfa)=>{
                     window.logAction(`Moving the automa ${amount} spaces.`)
                     window.automaPosition += amount
                     if(window.automaPosition < 0){
