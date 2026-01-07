@@ -42,7 +42,6 @@ def generate_nandeck_pdf(nandeck_exe_path, nde_script_path, output_pdf_name):
     ]
     try:
         result = subprocess.run(command, check=True, capture_output=True, text=True)
-        print(result.stdout)
         print(f"Success")
     except subprocess.CalledProcessError as e:
         print(f"Failure")
@@ -64,11 +63,13 @@ if __name__ == "__main__":
     soffice_exe = r"D:\bin\office\LibreOffice\program\soffice.exe"
 
     disney_pnp_pdf = "./export/Disney Villainous - Solo Mode - Waltina.pdf"
+    if os.path.exists(disney_pnp_pdf):
+        os.remove(disney_pnp_pdf)
     disney_rules_odt = './print-and-play/disney/disney-rules.odt'
     disney_board_image = './print-and-play/disney/image/Automa Track.png'
     disney_board_pdf = './export/disney-board.pdf'
     disney_deck = "./print-and-play/disney/villains.nde"
-    disney_deck_pdf = os.path.join("./export/","disney-deck.pdf")
+    disney_deck_pdf = os.path.abspath("./export/disney-deck.pdf")
 
     os.makedirs('./export',exist_ok=True)
 
@@ -77,3 +78,6 @@ if __name__ == "__main__":
     generate_nandeck_pdf(nandeck_exe, disney_deck, disney_deck_pdf)
     files_to_merge = [disney_rules_pdf, disney_board_pdf, disney_deck_pdf]
     merge_pdfs(disney_pnp_pdf, files_to_merge)
+    os.remove(disney_rules_pdf)
+    os.remove(disney_board_pdf)
+    os.remove(disney_deck_pdf)
