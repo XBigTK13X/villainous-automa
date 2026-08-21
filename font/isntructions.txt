@@ -1,0 +1,3 @@
+To use these fonts with nandeck, copy the specific otf/ttf you need next to the nandeck binary.
+
+This even works under WINE.

@@ -37,7 +37,7 @@ def convert_image_to_pdf(image_path, output_path):
 
 
 def generate_nandeck_pdf(nandeck_exe_path, nde_script_path, output_pdf_name):
-    print(f"Generating nandeck {nde_script_path}")
+    print(f"Generating nandeck pdf {nde_script_path}")
     command = [
         "xvfb-run",
         "-a",
@@ -69,8 +69,10 @@ def merge_pdfs(output_filename, input_files):
 
 
 if __name__ == "__main__":
-    nandeck_exe = os.path.expanduser("~/bin/nandeck.exe")
+    nandeck_exe = os.path.expanduser("~/bin/nandeck/nandeck.exe")
     soffice_exe = "soffice"
+
+    os.makedirs("./docs/image/disney/brain", exist_ok=True)
 
     disney_pnp_pdf = "./export/Disney Villainous - Solo Mode - Waltina.pdf"
     if os.path.exists(disney_pnp_pdf):
