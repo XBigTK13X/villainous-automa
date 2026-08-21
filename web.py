@@ -2,6 +2,8 @@ import os
 import sys
 import csv
 
+print("Preparing web payloads")
+
 disney_variants = {
     "Captain Hook": ["Worst", "Intro"],
     "Maleficent": ["Worst", "Intro", "Darkness"],

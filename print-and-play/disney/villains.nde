@@ -27,16 +27,16 @@ TEXT=,[SPECIAL],3%,18%,94%,28%,center,wwcenter
 
 ;SPECIAL HEADER
 FONT="Cabin",9,T,#000000
-TEXT=,"Special Rules",75%,13%,20%,10%,right,wordwrap,0,60
+TEXT=,"Special Rules",78%,13%,20%,10%,right,wordwrap,0,60
 
 ;PREFERENCE HEADER
 FONT="Cabin",9,T,#000000
-TEXT=,"Fate Target Priorities",75%,47.5%,20%,10%,right,wordwrap,0,60
+TEXT=,"Fate Target Priorities",73%,47.5%,25%,10%,right,wordwrap,0,60
 IMAGE=,"..\common\image\frame-short.png",1%,52%,98%,8%,0,T,10
 
 ;RESPONSE HEADER
 FONT="Cabin",9,T,#000000
-TEXT=,"Villain Activity Responses",65%,61%,30%,10%,right,wordwrap,0,60
+TEXT=,"Villain Activity Responses",68%,61%,30%,10%,right,wordwrap,0,60
 
 ;PREFERENCE
 FONT="Cabin",10,T,#000000
